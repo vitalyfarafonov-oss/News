@@ -1,0 +1,334 @@
+/* Reset & Base */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #0f0f1a;
+    --surface: #1a1a2e;
+    --surface-hover: #22223a;
+    --primary: #4f8cff;
+    --primary-dim: #3a6fd8;
+    --text: #e8e8f0;
+    --text-dim: #8888a0;
+    --accent-czech: #d7141a;
+    --accent-vaping: #00b4d8;
+    --card-border: #2a2a40;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding-top: var(--safe-top);
+    padding-bottom: var(--safe-bottom);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Header */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--surface);
+    padding: 16px 20px 12px;
+    padding-top: calc(var(--safe-top) + 16px);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--card-border);
+}
+
+header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+#last-updated {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+}
+
+/* Tabs */
+.tabs {
+    position: sticky;
+    top: 60px;
+    z-index: 99;
+    display: flex;
+    background: var(--surface);
+    border-bottom: 1px solid var(--card-border);
+    padding: 0 12px;
+}
+
+.tab {
+    flex: 1;
+    padding: 12px 16px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--text-dim);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.tab.active[data-tab="czech"] {
+    color: var(--accent-czech);
+    border-bottom-color: var(--accent-czech);
+}
+
+.tab.active[data-tab="vaping"] {
+    color: var(--accent-vaping);
+    border-bottom-color: var(--accent-vaping);
+}
+
+.tab:active {
+    background: var(--surface-hover);
+}
+
+/* Feed sections */
+main {
+    padding: 12px 16px 80px;
+}
+
+.feed {
+    display: none;
+}
+
+.feed.active {
+    display: block;
+}
+
+/* News cards */
+.news-card {
+    background: var(--surface);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    transition: background 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.news-card:active {
+    background: var(--surface-hover);
+}
+
+.news-card a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.news-card .card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.news-card .source-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+.translated-tag {
+    font-size: 0.65rem;
+    font-weight: 500;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: rgba(160, 120, 255, 0.15);
+    color: #a078ff;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.original-hint {
+    cursor: help;
+    opacity: 0.6;
+    font-size: 0.7rem;
+}
+
+.news-card[data-section="czech"] .source-badge {
+    background: rgba(215, 20, 26, 0.15);
+    color: var(--accent-czech);
+}
+
+.news-card[data-section="vaping"] .source-badge {
+    background: rgba(0, 180, 216, 0.15);
+    color: var(--accent-vaping);
+}
+
+.news-card .title {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.news-card .description {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.news-card .meta {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    display: flex;
+    gap: 12px;
+}
+
+/* Loading & Error states */
+.loading, .error-msg {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-dim);
+    font-size: 0.95rem;
+}
+
+.loading::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--card-border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.error-msg {
+    color: #ff6b6b;
+}
+
+/* Refresh button */
+#refresh-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 20px;
+    bottom: calc(var(--safe-bottom) + 24px);
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(79, 140, 255, 0.4);
+    transition: transform 0.2s ease, background 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+    z-index: 200;
+}
+
+#refresh-btn:active {
+    transform: scale(0.92);
+    background: var(--primary-dim);
+}
+
+#refresh-btn.spinning {
+    animation: spin 0.8s linear infinite;
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-dim);
+}
+
+.empty-state .icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+}
+
+/* Skeleton loading */
+.skeleton {
+    background: linear-gradient(90deg, var(--surface) 25%, var(--surface-hover) 50%, var(--surface) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 8px;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.skeleton-card {
+    background: var(--surface);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+}
+
+.skeleton-badge {
+    width: 80px;
+    height: 18px;
+    margin-bottom: 10px;
+}
+
+.skeleton-title {
+    height: 20px;
+    width: 90%;
+    margin-bottom: 8px;
+}
+
+.skeleton-title-2 {
+    height: 20px;
+    width: 65%;
+    margin-bottom: 10px;
+}
+
+.skeleton-desc {
+    height: 14px;
+    width: 100%;
+    margin-bottom: 6px;
+}
+
+.skeleton-desc-2 {
+    height: 14px;
+    width: 80%;
+    margin-bottom: 10px;
+}
+
+.skeleton-meta {
+    height: 12px;
+    width: 40%;
+}

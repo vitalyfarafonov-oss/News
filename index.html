@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Новости CZ">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>Новости CZ & Vaping</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="icon" type="image/png" href="icon-192.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Новости</h1>
+        <span id="last-updated"></span>
+    </header>
+
+    <nav class="tabs">
+        <button class="tab active" data-tab="czech">🇨🇿 Чехия</button>
+        <button class="tab" data-tab="vaping">💨 Вейпинг</button>
+    </nav>
+
+    <main>
+        <section id="czech" class="feed active">
+            <div class="loading">Загрузка новостей...</div>
+        </section>
+        <section id="vaping" class="feed">
+            <div class="loading">Загрузка новостей...</div>
+        </section>
+    </main>
+
+    <button id="refresh-btn" aria-label="Обновить">↻</button>
+
+    <script src="app.js"></script>
+</body>
+</html>
