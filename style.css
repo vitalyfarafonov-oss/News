@@ -76,16 +76,19 @@ header h1 {
 
 .tab {
     flex: 1;
-    padding: 12px 16px;
+    padding: 10px 6px;
     background: none;
     border: none;
     border-bottom: 3px solid transparent;
     color: var(--text-dim);
-    font-size: 0.95rem;
+    font-size: 0.82rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
     -webkit-tap-highlight-color: transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .tab.active[data-tab="czech"] {
