@@ -1,5 +1,5 @@
 // Service Worker — Cache static assets, network-first for API calls
-const CACHE_NAME = 'news-pwa-v2';
+const CACHE_NAME = 'news-pwa-v3';
 const STATIC_ASSETS = [
     './',
     './index.html',
@@ -35,15 +35,20 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
     const url = new URL(event.request.url);
 
+    // Only handle http/https requests (skip chrome-extension, etc.)
+    if (!url.protocol.startsWith('http')) return;
+
     // API calls — network first, fallback to cache
     if (url.hostname !== self.location.hostname) {
         event.respondWith(
             fetch(event.request)
                 .then(response => {
-                    const clone = response.clone();
-                    caches.open(CACHE_NAME).then(cache => {
-                        cache.put(event.request, clone);
-                    });
+                    if (response.ok) {
+                        const clone = response.clone();
+                        caches.open(CACHE_NAME).then(cache => {
+                            cache.put(event.request, clone);
+                        });
+                    }
                     return response;
                 })
                 .catch(() => caches.match(event.request))
@@ -51,9 +56,16 @@ self.addEventListener('fetch', event => {
         return;
     }
 
-    // Static assets — cache first, fallback to network
+    // Static assets — network first, fallback to cache (ensures updates propagate)
     event.respondWith(
-        caches.match(event.request)
-            .then(cached => cached || fetch(event.request))
+        fetch(event.request)
+            .then(response => {
+                const clone = response.clone();
+                caches.open(CACHE_NAME).then(cache => {
+                    cache.put(event.request, clone);
+                });
+                return response;
+            })
+            .catch(() => caches.match(event.request))
     );
 });
