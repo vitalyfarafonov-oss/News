@@ -14,6 +14,7 @@
     --text: #e8e8f0;
     --text-dim: #8888a0;
     --accent-czech: #d7141a;
+    --accent-estonia: #4891d9;
     --accent-vaping: #00b4d8;
     --card-border: #2a2a40;
     --safe-top: env(safe-area-inset-top, 0px);
@@ -90,6 +91,11 @@ header h1 {
 .tab.active[data-tab="czech"] {
     color: var(--accent-czech);
     border-bottom-color: var(--accent-czech);
+}
+
+.tab.active[data-tab="estonia"] {
+    color: var(--accent-estonia);
+    border-bottom-color: var(--accent-estonia);
 }
 
 .tab.active[data-tab="vaping"] {
@@ -172,6 +178,11 @@ main {
 .news-card[data-section="czech"] .source-badge {
     background: rgba(215, 20, 26, 0.15);
     color: var(--accent-czech);
+}
+
+.news-card[data-section="estonia"] .source-badge {
+    background: rgba(72, 145, 217, 0.15);
+    color: var(--accent-estonia);
 }
 
 .news-card[data-section="vaping"] .source-badge {

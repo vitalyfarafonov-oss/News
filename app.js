@@ -48,6 +48,30 @@ const FEEDS = {
             lang: 'cs',
         },
     ],
+    estonia: [
+        // Russian-language Estonian sources (no translation needed)
+        {
+            url: 'https://rus.err.ee/rss',
+            name: 'ERR RUS',
+            lang: 'ru',
+        },
+        {
+            url: 'https://rus.postimees.ee/rss',
+            name: 'Postimees RUS',
+            lang: 'ru',
+        },
+        {
+            url: 'https://rus.delfi.ee/rss',
+            name: 'Delfi RUS',
+            lang: 'ru',
+        },
+        // Estonian-language sources (will be translated to Russian)
+        {
+            url: 'https://www.err.ee/rss',
+            name: 'ERR.ee',
+            lang: 'et',
+        },
+    ],
     vaping: [
         // European & UK vaping news (English)
         {
@@ -244,7 +268,7 @@ function renderItems(container, items, section) {
     if (!items || items.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
-                <div class="icon">${section === 'czech' ? '🇨🇿' : '💨'}</div>
+                <div class="icon">${section === 'czech' ? '🇨🇿' : section === 'estonia' ? '🇪🇪' : '💨'}</div>
                 <p>Нет новостей для отображения.<br>Попробуйте обновить позже.</p>
             </div>`;
         return;
@@ -340,6 +364,7 @@ async function refreshAll() {
 
     await Promise.all([
         loadSection('czech', true),
+        loadSection('estonia', true),
         loadSection('vaping', true),
     ]);
 
@@ -374,8 +399,9 @@ document.addEventListener('DOMContentLoaded', () => {
         refreshBtn.addEventListener('click', refreshAll);
     }
 
-    // Initial load — both sections
+    // Initial load — all sections
     loadSection('czech');
+    loadSection('estonia');
     loadSection('vaping');
     updateTimestamp();
 
@@ -389,8 +415,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (document.visibilityState === 'visible') {
             // Check if cache is stale
             const czechCache = getCachedData('czech');
+            const estoniaCache = getCachedData('estonia');
             const vapingCache = getCachedData('vaping');
-            if (!czechCache || !vapingCache) {
+            if (!czechCache || !estoniaCache || !vapingCache) {
                 refreshAll();
             }
         }
