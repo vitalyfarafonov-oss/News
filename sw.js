@@ -1,5 +1,5 @@
 // Service Worker — Cache static assets, network-first for API calls
-const CACHE_NAME = 'news-pwa-v1';
+const CACHE_NAME = 'news-pwa-v2';
 const STATIC_ASSETS = [
     './',
     './index.html',
