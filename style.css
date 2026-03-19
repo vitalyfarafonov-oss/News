@@ -32,7 +32,6 @@ body {
     color: var(--text);
     min-height: 100vh;
     min-height: 100dvh;
-    padding-top: var(--safe-top);
     padding-bottom: var(--safe-bottom);
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
@@ -66,7 +65,7 @@ header h1 {
 /* Tabs */
 .tabs {
     position: sticky;
-    top: 60px;
+    top: calc(var(--safe-top) + 53px);
     z-index: 99;
     display: flex;
     background: var(--surface);
