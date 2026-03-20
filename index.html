@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Новости CZ">
+    <meta name="apple-mobile-web-app-title" content="Новости">
     <meta name="theme-color" content="#1a1a2e">
-    <title>Новости CZ & Vaping</title>
+    <title>Новости</title>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192.png">
     <link rel="icon" type="image/png" href="icon-192.png">
@@ -20,19 +20,31 @@
     </header>
 
     <nav class="tabs">
-        <button class="tab active" data-tab="czech">🇨🇿 Чехия</button>
-        <button class="tab" data-tab="estonia">🇪🇪 Эстония</button>
+        <button class="tab active" data-tab="world">🌍 Мир</button>
+        <button class="tab" data-tab="czech">🇨🇿 Чехия</button>
         <button class="tab" data-tab="vaping">💨 Вейпинг</button>
+        <button class="tab" data-tab="logistics">🚛 Логистика</button>
+        <button class="tab" data-tab="czechbiz">💼 HR/Налоги</button>
+        <button class="tab" data-tab="estonia">🇪🇪 Эстония</button>
     </nav>
 
     <main>
-        <section id="czech" class="feed active">
+        <section id="world" class="feed active">
             <div class="loading">Загрузка новостей...</div>
         </section>
-        <section id="estonia" class="feed">
+        <section id="czech" class="feed">
             <div class="loading">Загрузка новостей...</div>
         </section>
         <section id="vaping" class="feed">
+            <div class="loading">Загрузка новостей...</div>
+        </section>
+        <section id="logistics" class="feed">
+            <div class="loading">Загрузка новостей...</div>
+        </section>
+        <section id="czechbiz" class="feed">
+            <div class="loading">Загрузка новостей...</div>
+        </section>
+        <section id="estonia" class="feed">
             <div class="loading">Загрузка новостей...</div>
         </section>
     </main>

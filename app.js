@@ -5,7 +5,10 @@
 const CONFIG = {
     CACHE_DURATION_MS: 60 * 60 * 1000, // 1 hour
     AUTO_REFRESH_MS: 60 * 60 * 1000,   // 1 hour
-    RSS_PROXY: 'https://api.rss2json.com/v1/api.json?rss_url=',
+    // Primary: feed2json.org (free, no key, CORS-friendly, JSON Feed format)
+    RSS_PROXY_PRIMARY: 'https://feed2json.org/convert?url=',
+    // Fallback: rss2json.com (works for some feeds where feed2json fails)
+    RSS_PROXY_FALLBACK: 'https://api.rss2json.com/v1/api.json?rss_url=',
     MAX_ITEMS_PER_FEED: 10,
     TRANSLATE_ENDPOINT: 'https://translate.googleapis.com/translate_a/single',
 };
@@ -14,101 +17,39 @@ const CONFIG = {
 // lang: 'ru' = already Russian, no translation needed
 // lang: 'cs' or 'en' = will be auto-translated to Russian
 const FEEDS = {
-    czech: [
-        // Russian-language sources (no translation needed)
-        {
-            url: 'https://russian.radio.cz/rss.xml',
-            name: 'Radio Prague RU',
-            lang: 'ru',
-        },
-        {
-            url: 'https://420on.cz/news/rss',
-            name: '420on.cz',
-            lang: 'ru',
-        },
-        {
-            url: 'https://pražský-express.cz/feed',
-            name: 'Prague Express',
-            lang: 'ru',
-        },
-        // Czech-language sources (will be translated to Russian)
-        {
-            url: 'https://www.novinky.cz/rss',
-            name: 'Novinky.cz',
-            lang: 'cs',
-        },
-        {
-            url: 'https://servis.idnes.cz/rss.aspx?c=zpravodaj',
-            name: 'iDNES.cz',
-            lang: 'cs',
-        },
-        {
-            url: 'https://www.irozhlas.cz/rss/irozhlas/section/zpravy-domov',
-            name: 'iROZHLAS',
-            lang: 'cs',
-        },
+    world: [
+        { url: 'https://feeds.bbci.co.uk/news/world/rss.xml', name: 'BBC World', lang: 'en' },
+        { url: 'https://www.aljazeera.com/xml/rss/all.xml', name: 'Al Jazeera', lang: 'en' },
+        { url: 'https://rss.dw.com/rdf/rss-en-all', name: 'DW', lang: 'en' },
     ],
-    estonia: [
-        // Russian-language Estonian sources (no translation needed)
-        {
-            url: 'https://rus.err.ee/rss',
-            name: 'ERR RUS',
-            lang: 'ru',
-        },
-        {
-            url: 'https://rus.postimees.ee/rss',
-            name: 'Postimees RUS',
-            lang: 'ru',
-        },
-        {
-            url: 'https://rus.delfi.ee/rss',
-            name: 'Delfi RUS',
-            lang: 'ru',
-        },
-        // Estonian-language sources (will be translated to Russian)
-        {
-            url: 'https://www.err.ee/rss',
-            name: 'ERR.ee',
-            lang: 'et',
-        },
+    czech: [
+        { url: 'https://ruski.radio.cz/rcz-rss/ru', name: 'Radio Prague RU', lang: 'ru' },
+        { url: 'https://www.novinky.cz/rss', name: 'Novinky.cz', lang: 'cs' },
+        { url: 'https://servis.idnes.cz/rss.aspx?c=zpravodaj', name: 'iDNES.cz', lang: 'cs' },
+        { url: 'https://www.irozhlas.cz/rss/irozhlas/section/zpravy-domov', name: 'iROZHLAS', lang: 'cs' },
     ],
     vaping: [
-        // European & UK vaping/THR news (English)
-        {
-            url: 'https://www.vapingpost.com/feed/',
-            name: 'Vaping Post',
-            lang: 'en',
-        },
-        {
-            url: 'https://www.vapingpost.com/category/europe/feed/',
-            name: 'Vaping Post EU',
-            lang: 'en',
-        },
-        {
-            url: 'https://ethra.co/news?format=feed&type=rss',
-            name: 'ETHRA',
-            lang: 'en',
-        },
-        {
-            url: 'https://ukvia.co.uk/feed/',
-            name: 'UKVIA',
-            lang: 'en',
-        },
-        {
-            url: 'https://tobaccoreporter.com/feed/',
-            name: 'Tobacco Reporter',
-            lang: 'en',
-        },
-        {
-            url: 'https://tobaccoinsider.com/feed/',
-            name: 'Tobacco Insider',
-            lang: 'en',
-        },
-        {
-            url: 'https://www.ecigclick.co.uk/feed/',
-            name: 'Ecigclick',
-            lang: 'en',
-        },
+        { url: 'https://www.vapingpost.com/feed/', name: 'Vaping Post', lang: 'en' },
+        { url: 'https://www.vapingpost.com/category/europe/feed/', name: 'Vaping Post EU', lang: 'en' },
+        { url: 'https://ethra.co/news?format=feed&type=rss', name: 'ETHRA', lang: 'en' },
+        { url: 'https://tobaccoreporter.com/feed/', name: 'Tobacco Reporter', lang: 'en' },
+        { url: 'https://tobaccoinsider.com/feed/', name: 'Tobacco Insider', lang: 'en' },
+    ],
+    logistics: [
+        { url: 'https://theloadstar.com/feed/', name: 'The Loadstar', lang: 'en' },
+        { url: 'https://www.ti-insight.com/feed/', name: 'Transport Intelligence', lang: 'en' },
+        { url: 'https://www.supplychaindive.com/feeds/news/', name: 'Supply Chain Dive', lang: 'en' },
+        { url: 'https://www.container-news.com/feed/', name: 'Container News', lang: 'en' },
+    ],
+    czechbiz: [
+        { url: 'https://www.e15.cz/rss', name: 'E15.cz', lang: 'cs' },
+        { url: 'https://www.aktualne.cz/rss/ekonomika/', name: 'Aktualne.cz', lang: 'cs' },
+        { url: 'https://www.czechcrunch.cz/feed/', name: 'CzechCrunch', lang: 'cs' },
+    ],
+    estonia: [
+        { url: 'https://rus.err.ee/rss', name: 'ERR RUS', lang: 'ru' },
+        { url: 'https://rus.postimees.ee/rss', name: 'Postimees RUS', lang: 'ru' },
+        { url: 'https://www.err.ee/rss', name: 'ERR.ee', lang: 'et' },
     ],
 };
 
@@ -188,36 +129,69 @@ function setCachedData(section, items) {
 // RSS Fetching
 // =============================================
 
+// Parse feed2json.org response (JSON Feed format)
+function parseFeed2JsonResponse(data) {
+    if (!data.items || !Array.isArray(data.items)) return null;
+    return data.items.map(item => ({
+        title: item.title || '',
+        description: item.summary || item.content_html || '',
+        link: item.url || '#',
+        pubDate: item.date_published || '',
+    }));
+}
+
+// Parse rss2json.com response
+function parseRss2JsonResponse(data) {
+    if (data.status !== 'ok' || !data.items) return null;
+    return data.items.map(item => ({
+        title: item.title || '',
+        description: item.description || '',
+        link: item.link || '#',
+        pubDate: item.pubDate || '',
+    }));
+}
+
 async function fetchFeed(feedConfig) {
-    const proxyUrl = CONFIG.RSS_PROXY + encodeURIComponent(feedConfig.url);
-    try {
-        const resp = await fetch(proxyUrl);
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-        const data = await resp.json();
-        if (data.status !== 'ok' || !data.items) return [];
+    // Try primary proxy (feed2json.org) first, then fallback (rss2json.com)
+    const proxies = [
+        { url: CONFIG.RSS_PROXY_PRIMARY + encodeURIComponent(feedConfig.url), parser: parseFeed2JsonResponse },
+        { url: CONFIG.RSS_PROXY_FALLBACK + encodeURIComponent(feedConfig.url), parser: parseRss2JsonResponse },
+    ];
 
-        const rawItems = data.items.slice(0, CONFIG.MAX_ITEMS_PER_FEED).map(item => ({
-            title: stripHtml(item.title || ''),
-            description: stripHtml(item.description || '').slice(0, 300),
-            link: item.link || '#',
-            pubDate: item.pubDate || '',
-            source: feedConfig.name,
-            lang: feedConfig.lang,
-        }));
+    for (const proxy of proxies) {
+        try {
+            const resp = await fetch(proxy.url);
+            if (!resp.ok) continue;
+            const data = await resp.json();
+            const parsed = proxy.parser(data);
+            if (!parsed || parsed.length === 0) continue;
 
-        // Translate if needed
-        if (feedConfig.lang !== 'ru') {
-            const translated = await Promise.all(
-                rawItems.map(item => translateItem(item, feedConfig.lang))
-            );
-            return translated;
+            const rawItems = parsed.slice(0, CONFIG.MAX_ITEMS_PER_FEED).map(item => ({
+                title: stripHtml(item.title),
+                description: stripHtml(item.description).slice(0, 300),
+                link: item.link,
+                pubDate: item.pubDate,
+                source: feedConfig.name,
+                lang: feedConfig.lang,
+            }));
+
+            // Translate if needed
+            if (feedConfig.lang !== 'ru') {
+                const translated = await Promise.all(
+                    rawItems.map(item => translateItem(item, feedConfig.lang))
+                );
+                return translated;
+            }
+
+            return rawItems;
+        } catch (err) {
+            console.warn(`Proxy failed for ${feedConfig.name}:`, err.message);
+            continue;
         }
-
-        return rawItems;
-    } catch (err) {
-        console.warn(`Failed to fetch ${feedConfig.name}:`, err.message);
-        return [];
     }
+
+    console.warn(`All proxies failed for ${feedConfig.name}`);
+    return [];
 }
 
 async function fetchSection(section) {
@@ -274,11 +248,16 @@ function renderSkeletons(container) {
     container.innerHTML = html;
 }
 
+const SECTION_ICONS = {
+    world: '🌍', czech: '🇨🇿', vaping: '💨',
+    logistics: '🚛', czechbiz: '💼', estonia: '🇪🇪',
+};
+
 function renderItems(container, items, section) {
     if (!items || items.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
-                <div class="icon">${section === 'czech' ? '🇨🇿' : section === 'estonia' ? '🇪🇪' : '💨'}</div>
+                <div class="icon">${SECTION_ICONS[section] || '📰'}</div>
                 <p>Нет новостей для отображения.<br>Попробуйте обновить позже.</p>
             </div>`;
         return;
@@ -327,7 +306,8 @@ function updateTimestamp() {
 // Main App Logic
 // =============================================
 
-let currentTab = 'czech';
+const ALL_SECTIONS = ['world', 'czech', 'vaping', 'logistics', 'czechbiz', 'estonia'];
+let currentTab = 'world';
 let isRefreshing = false;
 
 async function loadSection(section, forceRefresh = false) {
@@ -372,11 +352,7 @@ async function refreshAll() {
     const btn = document.getElementById('refresh-btn');
     if (btn) btn.classList.add('spinning');
 
-    await Promise.all([
-        loadSection('czech', true),
-        loadSection('estonia', true),
-        loadSection('vaping', true),
-    ]);
+    await Promise.all(ALL_SECTIONS.map(s => loadSection(s, true)));
 
     updateTimestamp();
     isRefreshing = false;
@@ -410,9 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Initial load — all sections
-    loadSection('czech');
-    loadSection('estonia');
-    loadSection('vaping');
+    ALL_SECTIONS.forEach(s => loadSection(s));
     updateTimestamp();
 
     // Auto-refresh every hour
@@ -424,10 +398,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible') {
             // Check if cache is stale
-            const czechCache = getCachedData('czech');
-            const estoniaCache = getCachedData('estonia');
-            const vapingCache = getCachedData('vaping');
-            if (!czechCache || !estoniaCache || !vapingCache) {
+            const anyStale = ALL_SECTIONS.some(s => !getCachedData(s));
+            if (anyStale) {
                 refreshAll();
             }
         }
