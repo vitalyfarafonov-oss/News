@@ -16,7 +16,7 @@
     --accent-world: #f59e0b;
     --accent-czech: #d7141a;
     --accent-vaping: #00b4d8;
-    --accent-logistics: #10b981;
+    --accent-scm: #10b981;
     --accent-czechbiz: #a78bfa;
     --accent-estonia: #4891d9;
     --card-border: #2a2a40;
@@ -113,9 +113,9 @@ header h1 {
     border-bottom-color: var(--accent-vaping);
 }
 
-.tab.active[data-tab="logistics"] {
-    color: var(--accent-logistics);
-    border-bottom-color: var(--accent-logistics);
+.tab.active[data-tab="scm"] {
+    color: var(--accent-scm);
+    border-bottom-color: var(--accent-scm);
 }
 
 .tab.active[data-tab="czechbiz"] {
@@ -215,9 +215,9 @@ main {
     color: var(--accent-vaping);
 }
 
-.news-card[data-section="logistics"] .source-badge {
+.news-card[data-section="scm"] .source-badge {
     background: rgba(16, 185, 129, 0.15);
-    color: var(--accent-logistics);
+    color: var(--accent-scm);
 }
 
 .news-card[data-section="czechbiz"] .source-badge {

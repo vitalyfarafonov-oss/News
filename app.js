@@ -9,7 +9,7 @@ const CONFIG = {
     RSS_PROXY_PRIMARY: 'https://feed2json.org/convert?url=',
     // Fallback: rss2json.com (works for some feeds where feed2json fails)
     RSS_PROXY_FALLBACK: 'https://api.rss2json.com/v1/api.json?rss_url=',
-    MAX_ITEMS_PER_FEED: 10,
+    MAX_ITEMS_PER_FEED: 15,
     TRANSLATE_ENDPOINT: 'https://translate.googleapis.com/translate_a/single',
 };
 
@@ -35,11 +35,12 @@ const FEEDS = {
         { url: 'https://tobaccoreporter.com/feed/', name: 'Tobacco Reporter', lang: 'en' },
         { url: 'https://tobaccoinsider.com/feed/', name: 'Tobacco Insider', lang: 'en' },
     ],
-    logistics: [
+    scm: [
         { url: 'https://theloadstar.com/feed/', name: 'The Loadstar', lang: 'en' },
         { url: 'https://www.ti-insight.com/feed/', name: 'Transport Intelligence', lang: 'en' },
         { url: 'https://www.supplychaindive.com/feeds/news/', name: 'Supply Chain Dive', lang: 'en' },
         { url: 'https://www.container-news.com/feed/', name: 'Container News', lang: 'en' },
+        { url: 'https://www.hellenicshippingnews.com/feed/', name: 'Hellenic Shipping', lang: 'en' },
     ],
     czechbiz: [
         { url: 'https://www.e15.cz/rss', name: 'E15.cz', lang: 'cs' },
@@ -52,6 +53,148 @@ const FEEDS = {
         { url: 'https://www.err.ee/rss', name: 'ERR.ee', lang: 'et' },
     ],
 };
+
+// =============================================
+// Keyword filters per section
+// =============================================
+// blacklist: exclude items matching ANY of these (case-insensitive, original language)
+// whitelist: keep ONLY items matching at least one keyword (applied to title+description)
+// Filters run on ORIGINAL text (before translation) for accuracy
+
+const SECTION_FILTERS = {
+    world: {
+        // Keep only critical/breaking news
+        whitelist: [
+            // Conflicts & security
+            'war', 'attack', 'strike', 'bomb', 'missile', 'troops', 'invasion',
+            'ceasefire', 'killed', 'dead', 'casualties', 'hostage', 'terrorist',
+            'nuclear', 'weapon', 'military', 'nato', 'conflict', 'siege',
+            // Natural disasters & emergencies
+            'earthquake', 'tsunami', 'hurricane', 'flood', 'wildfire', 'eruption',
+            'disaster', 'emergency', 'evacuation', 'collapse',
+            // Geopolitics & economy shocks
+            'sanctions', 'tariff', 'embargo', 'crisis', 'recession', 'crash',
+            'default', 'coup', 'protest', 'revolution', 'election',
+            'pandemic', 'outbreak', 'epidemic',
+            // Breaking
+            'breaking', 'urgent', 'just in',
+        ],
+    },
+    czech: {
+        // Exclude sports and fluff
+        blacklist: [
+            // Sports (Czech)
+            'sport', 'fotbal', 'hokej', 'liga', 'zapas', 'zápas', 'mistrovstv',
+            'olympi', 'tenis', 'atletik', 'gol ', 'penalty', 'trenér', 'trener',
+            'hrác', 'hrac', 'semifinal', 'finále', 'finale', 'extralig',
+            'champions league', 'bundeslig', 'premier league', 'uefa', 'fifa',
+            'formule 1', 'f1 ', 'moto gp', 'nhl', 'nba',
+            // Sports (Russian - for Radio Prague RU)
+            'спорт', 'футбол', 'хоккей', 'теннис', 'чемпионат', 'олимп',
+            'матч', 'тренер', 'голеадор', 'лига чемпионов',
+            // Fluff
+            'celebrity', 'celebrit', 'hvězd', 'hvezd', 'reality show',
+            'soutěž', 'soutez', 'kulinář', 'recept ',
+        ],
+    },
+    scm: {
+        // Focus: shipping costs, delivery times, material prices, conflict impact on supply chain
+        whitelist: [
+            // Cost & pricing
+            'cost', 'price', 'rate', 'freight rate', 'shipping cost', 'surcharge',
+            'tariff', 'fee', 'expensive', 'cheap', 'inflation',
+            // Delays & disruption
+            'delay', 'disrupt', 'shortage', 'backlog', 'congestion', 'bottleneck',
+            'lead time', 'transit time', 'stuck', 'stranded', 'reroute',
+            // Geopolitical impact
+            'red sea', 'suez', 'panama canal', 'houthi', 'sanctions', 'embargo',
+            'trade war', 'conflict', 'blockade', 'piracy', 'attack',
+            // Materials & commodities
+            'raw material', 'commodity', 'steel', 'alumin', 'plastic', 'resin',
+            'nickel', 'lithium', 'copper', 'paper', 'cardboard', 'packaging',
+            'chemical', 'propylene', 'glycol', 'flavour', 'flavor', 'nicotine',
+            // Supply chain critical
+            'supply chain', 'inventory', 'stockpil', 'procurement', 'sourcing',
+            'container', 'port', 'vessel', 'carrier',
+        ],
+    },
+    czechbiz: {
+        // Focus: HR, tax, labor law, regulations for business
+        whitelist: [
+            // Tax (Czech)
+            'dan', 'daň', 'dph', 'dppo', 'dpfo', 'srazkova', 'srážkov',
+            'financni urad', 'finanční úřad', 'danove priznan', 'daňové přiznán',
+            'eet', 'kontrolni hlaseni', 'kontrolní hlášení',
+            // HR & labor (Czech)
+            'mzd', 'plat', 'zamestnan', 'zaměstnan', 'pracovn', 'práce',
+            'zamestnava', 'zaměstnáva', 'vypovedь', 'výpověd', 'odstupn',
+            'dovolenа', 'dovolen', 'nemocensk', 'osvc', 'osvč',
+            'pracovni smlouv', 'pracovní smlouv', 'zkusebni dob', 'zkušební dob',
+            'home office', 'prace na dalku', 'práce na dálku',
+            // Social & insurance
+            'socialni pojisten', 'sociální pojištěn', 'zdravotni pojisten',
+            'zdravotní pojištěn', 'cssz', 'čssz', 'duchod', 'důchod',
+            // Business regulations
+            'zakon', 'zákon', 'novela', 'vyhlask', 'vyhlásk', 'regulac',
+            'pokut', 'inspekc', 'urad prace', 'úřad práce', 'insolvenc',
+            'obchodni rejstrik', 'obchodní rejstřík', 'zivnostens', 'živnostens',
+            // General business keywords
+            'podnikatel', 'firma', 'employer', 'employee', 'minimum wage',
+            'labor code', 'zákoník práce', 'zakonik prace',
+        ],
+    },
+    estonia: {
+        // Exclude sports and fluff
+        blacklist: [
+            // Sports (Estonian)
+            'sport', 'jalgpall', 'korvpall', 'volle', 'hokk', 'tennis',
+            'olumpia', 'olümpia', 'karikas', 'meistriliiga', 'meistrivois',
+            'voistlus', 'voistl', 'medal',
+            // Sports (Russian - for ERR/Postimees RU)
+            'спорт', 'футбол', 'хоккей', 'теннис', 'баскетбол', 'волейбол',
+            'чемпионат', 'олимп', 'матч', 'тренер', 'лига', 'турнир',
+            'сборная', 'гонк', 'формула',
+            // Fluff
+            'celebrity', 'kuulsus', 'staar', 'reality', 'saade ', 'сериал',
+            'звезд', 'шоу-бизнес', 'развлечен',
+        ],
+    },
+    // vaping: no filter needed - feeds are already focused
+};
+
+// Check if text matches any keyword from the list (case-insensitive)
+function matchesKeywords(text, keywords) {
+    if (!text || !keywords || keywords.length === 0) return false;
+    const lower = text.toLowerCase();
+    return keywords.some(kw => lower.includes(kw.toLowerCase()));
+}
+
+// Filter items for a section based on whitelist/blacklist
+function filterItems(items, section) {
+    const filter = SECTION_FILTERS[section];
+    if (!filter) return items;
+
+    return items.filter(item => {
+        // Combine original title (if available) + translated title + description for matching
+        const searchText = [
+            item.originalTitle || '',
+            item.title || '',
+            item.description || '',
+        ].join(' ');
+
+        // Blacklist: exclude if any blacklist keyword matches
+        if (filter.blacklist && matchesKeywords(searchText, filter.blacklist)) {
+            return false;
+        }
+
+        // Whitelist: keep only if at least one whitelist keyword matches
+        if (filter.whitelist && !matchesKeywords(searchText, filter.whitelist)) {
+            return false;
+        }
+
+        return true;
+    });
+}
 
 // =============================================
 // Translation (Google Translate — free unofficial API)
@@ -197,9 +340,12 @@ async function fetchFeed(feedConfig) {
 async function fetchSection(section) {
     const feeds = FEEDS[section] || [];
     const results = await Promise.allSettled(feeds.map(f => fetchFeed(f)));
-    const allItems = results
+    let allItems = results
         .filter(r => r.status === 'fulfilled')
         .flatMap(r => r.value);
+
+    // Apply keyword filters
+    allItems = filterItems(allItems, section);
 
     // Sort by date descending
     allItems.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
@@ -250,7 +396,7 @@ function renderSkeletons(container) {
 
 const SECTION_ICONS = {
     world: '🌍', czech: '🇨🇿', vaping: '💨',
-    logistics: '🚛', czechbiz: '💼', estonia: '🇪🇪',
+    scm: '📦', czechbiz: '💼', estonia: '🇪🇪',
 };
 
 function renderItems(container, items, section) {
@@ -306,7 +452,7 @@ function updateTimestamp() {
 // Main App Logic
 // =============================================
 
-const ALL_SECTIONS = ['world', 'czech', 'vaping', 'logistics', 'czechbiz', 'estonia'];
+const ALL_SECTIONS = ['world', 'czech', 'vaping', 'scm', 'czechbiz', 'estonia'];
 let currentTab = 'world';
 let isRefreshing = false;
 
