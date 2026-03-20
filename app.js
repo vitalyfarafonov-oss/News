@@ -73,30 +73,40 @@ const FEEDS = {
         },
     ],
     vaping: [
-        // European & UK vaping news (English)
+        // European & UK vaping/THR news (English)
         {
             url: 'https://www.vapingpost.com/feed/',
             name: 'Vaping Post',
             lang: 'en',
         },
         {
-            url: 'https://vaping360.com/feed/',
-            name: 'Vaping360',
+            url: 'https://www.vapingpost.com/category/europe/feed/',
+            name: 'Vaping Post EU',
             lang: 'en',
         },
         {
-            url: 'https://www.ecigintelligence.com/feed/',
-            name: 'ECig Intelligence',
+            url: 'https://ethra.co/news?format=feed&type=rss',
+            name: 'ETHRA',
             lang: 'en',
         },
         {
-            url: 'https://www.planetofthevapes.co.uk/news/rss',
-            name: 'Planet of the Vapes UK',
+            url: 'https://ukvia.co.uk/feed/',
+            name: 'UKVIA',
             lang: 'en',
         },
         {
-            url: 'https://filtermag.org/feed/',
-            name: 'Filter Magazine',
+            url: 'https://tobaccoreporter.com/feed/',
+            name: 'Tobacco Reporter',
+            lang: 'en',
+        },
+        {
+            url: 'https://tobaccoinsider.com/feed/',
+            name: 'Tobacco Insider',
+            lang: 'en',
+        },
+        {
+            url: 'https://www.ecigclick.co.uk/feed/',
+            name: 'Ecigclick',
             lang: 'en',
         },
     ],
