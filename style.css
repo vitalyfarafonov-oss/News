@@ -13,6 +13,7 @@
     --primary-dim: #3a6fd8;
     --text: #e8e8f0;
     --text-dim: #8888a0;
+    --accent-summary: #f472b6;
     --accent-world: #f59e0b;
     --accent-czech: #d7141a;
     --accent-vaping: #00b4d8;
@@ -96,6 +97,11 @@ header h1 {
     transition: all 0.2s ease;
     -webkit-tap-highlight-color: transparent;
     white-space: nowrap;
+}
+
+.tab.active[data-tab="summary"] {
+    color: var(--accent-summary);
+    border-bottom-color: var(--accent-summary);
 }
 
 .tab.active[data-tab="world"] {
@@ -382,4 +388,67 @@ main {
 .skeleton-meta {
     height: 12px;
     width: 40%;
+}
+
+/* Daily Summary (SUM tab) */
+.summary-container {
+    background: var(--surface);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.summary-header {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--card-border);
+}
+
+.summary-date {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent-summary);
+    text-transform: capitalize;
+    margin-bottom: 4px;
+}
+
+.summary-meta {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+}
+
+.summary-body {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text);
+}
+
+.summary-body p {
+    margin-bottom: 8px;
+}
+
+.summary-body h3.sum-heading {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent-summary);
+    margin-top: 20px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(244, 114, 182, 0.2);
+}
+
+.summary-body h3.sum-heading:first-child {
+    margin-top: 0;
+}
+
+.summary-body h4.sum-subheading {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-top: 12px;
+    margin-bottom: 6px;
+}
+
+.summary-body strong {
+    color: #fff;
 }
