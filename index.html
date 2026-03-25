@@ -20,7 +20,8 @@
     </header>
 
     <nav class="tabs">
-        <button class="tab active" data-tab="world">🌍 Мир</button>
+        <button class="tab active" data-tab="summary">📋 SUM</button>
+        <button class="tab" data-tab="world">🌍 Мир</button>
         <button class="tab" data-tab="czech">🇨🇿 Чехия</button>
         <button class="tab" data-tab="vaping">💨 Вейпинг</button>
         <button class="tab" data-tab="scm">📦 SCM</button>
@@ -29,7 +30,10 @@
     </nav>
 
     <main>
-        <section id="world" class="feed active">
+        <section id="summary" class="feed active">
+            <div class="loading">Загрузка сводки...</div>
+        </section>
+        <section id="world" class="feed">
             <div class="loading">Загрузка новостей...</div>
         </section>
         <section id="czech" class="feed">
